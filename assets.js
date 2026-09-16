@@ -3,6 +3,7 @@ var IMG = {
 	achievement: 'img/aboutme/achievements.jpg',
 	before1: 'img/aboutme/before1.jpg',
 	before2: 'img/aboutme/before2.jpg',
+	before3:'img/aboutme/before3.jpg',
 	after1: 'img/aboutme/after1.jpg',
 	after2: 'img/aboutme/after2.jpg',
 	after3: 'img/aboutme/after3.jpg',

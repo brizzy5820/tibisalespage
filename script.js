@@ -80,6 +80,26 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('lightboxClose').addEventListener('click', () => lightbox.classList.remove('open'));
   lightbox.addEventListener('click', (e) => { if (e.target === lightbox) lightbox.classList.remove('open'); });
 
+  /* ---------- WISTIA VIDEO ---------- */
+  const wistiaVideo = document.getElementById('wistiaVideo');
+  const wistiaUrl = wistiaVideo?.dataset.wistiaUrl?.trim();
+  if (wistiaVideo && wistiaUrl) {
+    try {
+      const url = new URL(wistiaUrl);
+      const videoId = url.pathname.match(/\/(?:medias|embed\/iframe)\/([^/?#]+)/)?.[1];
+      if (videoId) {
+        const player = document.createElement('wistia-player');
+        player.setAttribute('media-id', videoId);
+        player.setAttribute('fit-strategy', 'contain');
+        player.setAttribute('aspect', '1.7778');
+        player.setAttribute('fullscreen-control', 'true');
+        wistiaVideo.replaceChildren(player);
+      }
+    } catch (error) {
+      console.warn('Use a valid Wistia video URL for the hero video.', error);
+    }
+  }
+
   /* ---------- ACHIEVEMENT IMAGE ---------- */
   const achievementImg = document.querySelector('#achievementTrigger img');
   if (achievementImg && window.IMG) {
@@ -104,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     state.track.style.transform = `translateY(-${idx * 100}%)`;
   }
 
-  const beforeState = buildTrack('beforeTrack', ['before1', 'before2']);
+  const beforeState = buildTrack('beforeTrack', ['before1', 'before2', 'before3']);
   const afterState = buildTrack('afterTrack', ['after1', 'after2', 'after3', 'after4', 'after5']);
 
   if (beforeState) setPos(beforeState, 0);
@@ -129,13 +149,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (testTrack && window.IMG) {
     testimonialKeys.forEach(k => {
+      const slide = document.createElement('div');
+      slide.className = 'testimonial-slide';
       const img = document.createElement('img');
       img.src = IMG[k];
       img.alt = 'Student result screenshot';
       img.loading = 'lazy';
       img.addEventListener('click', () => openLightbox(IMG[k]));
-      testTrack.appendChild(img);
+
+      const enlargeButton = document.createElement('button');
+      enlargeButton.className = 'testimonial-enlarge';
+      enlargeButton.type = 'button';
+      enlargeButton.setAttribute('aria-label', 'Enlarge testimonial image');
+      enlargeButton.innerHTML = '<i data-lucide="maximize-2"></i>';
+      enlargeButton.addEventListener('click', () => openLightbox(IMG[k]));
+
+      slide.append(img, enlargeButton);
+      testTrack.appendChild(slide);
     });
+    lucide.createIcons();
 
     testimonialKeys.forEach((k, i) => {
       const dot = document.createElement('span');
